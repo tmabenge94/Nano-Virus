@@ -34,7 +34,7 @@ public class Virus implements ISubject {
             }
         };
 
-        timer.schedule(task, 1, 10);
+        timer.schedule(task, 1, 2000);
     }
 
     public void stop() {
