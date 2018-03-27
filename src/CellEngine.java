@@ -143,9 +143,8 @@ public class CellEngine implements IObserver {
 
     private void writeEngineState() throws IOException {
 
-
         PrintStream ps = new PrintStream(newFile);
-        ps.println("Cell");
+        ps.println("Cell:" + cells.size());
 
     }
 
