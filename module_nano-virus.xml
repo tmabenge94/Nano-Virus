@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_nano-virus" default="compile.module.nano-virus">
+    <dirname property="module.nano-virus.basedir" file="${ant.file.module_nano-virus}"/>
+
+    <property name="module.jdk.home.nano-virus" value="${project.jdk.home}"/>
+    <property name="module.jdk.bin.nano-virus" value="${project.jdk.bin}"/>
+    <property name="module.jdk.classpath.nano-virus" value="${project.jdk.classpath}"/>
+
+    <property name="compiler.args.nano-virus" value="-encoding UTF-8 -source 9 -target 9 ${compiler.args}"/>
+
+    <property name="nano-virus.output.dir" value="${module.nano-virus.basedir}/out/production/Nano-Virus"/>
+    <property name="nano-virus.testoutput.dir" value="${module.nano-virus.basedir}/out/test/Nano-Virus"/>
+
+    <path id="nano-virus.module.bootclasspath">
+        <!-- Paths to be included in compilation bootclasspath -->
+    </path>
+
+    <path id="nano-virus.module.production.classpath">
+        <path refid="${module.jdk.classpath.nano-virus}"/>
+    </path>
+
+    <path id="nano-virus.runtime.production.module.classpath">
+        <pathelement location="${nano-virus.output.dir}"/>
+    </path>
+
+    <path id="nano-virus.module.classpath">
+        <path refid="${module.jdk.classpath.nano-virus}"/>
+        <pathelement location="${nano-virus.output.dir}"/>
+    </path>
+
+    <path id="nano-virus.runtime.module.classpath">
+        <pathelement location="${nano-virus.testoutput.dir}"/>
+        <pathelement location="${nano-virus.output.dir}"/>
+    </path>
+
+
+    <patternset id="excluded.from.module.nano-virus">
+        <patternset refid="ignored.files"/>
+    </patternset>
+
+    <patternset id="excluded.from.compilation.nano-virus">
+        <patternset refid="excluded.from.module.nano-virus"/>
+    </patternset>
+
+    <path id="nano-virus.module.sourcepath">
+        <dirset dir="${module.nano-virus.basedir}">
+            <include name="src"/>
+        </dirset>
+    </path>
+
+
+    <target name="compile.module.nano-virus"
+            depends="compile.module.nano-virus.production,compile.module.nano-virus.tests"
+            description="Compile module Nano-Virus"/>
+
+    <target name="compile.module.nano-virus.production" depends="register.custom.compilers"
+            description="Compile module Nano-Virus; production classes">
+        <mkdir dir="${nano-virus.output.dir}"/>
+        <javac2 destdir="${nano-virus.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}"
+                memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.nano-virus}/javac">
+            <compilerarg line="${compiler.args.nano-virus}"/>
+            <bootclasspath refid="nano-virus.module.bootclasspath"/>
+            <classpath refid="nano-virus.module.production.classpath"/>
+            <src refid="nano-virus.module.sourcepath"/>
+            <patternset refid="excluded.from.compilation.nano-virus"/>
+        </javac2>
+
+        <copy todir="${nano-virus.output.dir}">
+            <fileset dir="${module.nano-virus.basedir}/src">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile.module.nano-virus.tests"
+            depends="register.custom.compilers,compile.module.nano-virus.production"
+            description="compile module Nano-Virus; test classes" unless="skip.tests"/>
+
+    <target name="clean.module.nano-virus" description="cleanup module">
+        <delete dir="${nano-virus.output.dir}"/>
+        <delete dir="${nano-virus.testoutput.dir}"/>
+    </target>
+</project>
